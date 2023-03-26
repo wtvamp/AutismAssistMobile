@@ -5,9 +5,9 @@
 @inject IFileService FileService
 
 <div>
-    @foreach (var image in friend.Images)
+    @foreach (var friendImage in friendImageData)
     {
-        <img src="@image.ImageUrl" />
+        <img src="@friendImage" width="10%"/>
     }
     <div>@friend.FirstName @friend.LastName</div>
     <InputFile OnChange="@UploadImages" multiple />
@@ -17,12 +17,17 @@
     [Parameter]
     public int id { get; set; }
     Friend friend;
+    private List<String> friendImageData = new List<String>();
 
     protected override async Task OnInitializedAsync()
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         id = int.Parse(uri.Segments.Last());
         friend = await friendService.GetFriend(id);
+        foreach (var image in friend.Images)
+        {
+            friendImageData.Add(string.Format("data:image/png;base64,{0}", Convert.ToBase64String(await FileService.LoadAsync(image.ImageUrl))));
+        }
     }
 
     private async Task UploadImages(InputFileChangeEventArgs e)
@@ -39,6 +44,7 @@
 
             var newImage = new FriendImage { ImageUrl = localImagePath };
             friend.Images.Add(newImage);
+            friendImageData.Add(string.Format("data:image/png;base64,{0}", Convert.ToBase64String(imageData)));
         }
         await friendService.SaveImages(friend);
     }
