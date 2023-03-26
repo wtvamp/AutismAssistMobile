@@ -41,7 +41,7 @@ public static class MauiProgram
 #endif
 
 		builder.Services.AddSingleton<WeatherForecastService>();
-
+		builder.Services.AddSingleton<IFileService, LocalFileService>();
 		return builder.Build();
 	}
 }
