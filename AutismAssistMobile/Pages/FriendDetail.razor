@@ -1,0 +1,22 @@
+@page "/frienddetail/{id:int}"
+@using AutismAssistMobile.Data;
+@inject NavigationManager NavigationManager
+@inject IFriendService friendService
+
+<div>
+    <img src="" />
+    <div>@friend.FirstName @friend.LastName</div>
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    Friend friend;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        id = int.Parse(uri.Segments.Last());
+        friend = await friendService.GetFriend(id);
+    }
+}
