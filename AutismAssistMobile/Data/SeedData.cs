@@ -10,17 +10,20 @@ public static class SeedData
             {
                 Id = 1,
                 FirstName = "Bruce",
-                LastName = "Wayne"
+                LastName = "Wayne",
+                Images = new List<FriendImage>()
             },
             new Friend() {
                 Id = 2,
                 FirstName = "Clark",
-                LastName = "Kent"
+                LastName = "Kent",
+                Images = new List<FriendImage>()
             },
             new Friend() {
                 Id = 3,
                 FirstName = "Arthur",
-                LastName = "Curry"            
+                LastName = "Curry",
+                Images = new List<FriendImage>()          
             }
         };
         db.Friends.AddRange(friends);

@@ -26,6 +26,21 @@ public class FriendService : IFriendService
 
     public async Task<List<Friend>> GetFriendsAsync()
     {
-        return await db.Friends.ToListAsync();
+        return await db.Friends.Include(d => d.Images).ToListAsync();
+    }
+
+    public async Task SaveImages(Friend friend)
+    {
+        await db.SaveChangesAsync();
+
+        foreach (var image in friend.Images)
+        {
+            if (image.Id == 0)
+            {
+                db.FriendImages.Add(image);
+            }
+        }
+
+        await db.SaveChangesAsync();
     }
 }

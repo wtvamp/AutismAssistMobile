@@ -27,8 +27,6 @@
 
     private async Task UploadImages(InputFileChangeEventArgs e)
     {
-        
-
         foreach (var file in e.GetMultipleFiles())
         {
             using var memoryStream = new MemoryStream();
@@ -42,6 +40,6 @@
             var newImage = new FriendImage { ImageUrl = localImagePath };
             friend.Images.Add(newImage);
         }
-
+        await friendService.SaveImages(friend);
     }
 }

@@ -39,8 +39,6 @@ public static class MauiProgram
                     SeedData.Initialize(db);
                 }
 #endif
-
-		builder.Services.AddSingleton<WeatherForecastService>();
 		builder.Services.AddSingleton<IFileService, LocalFileService>();
 		return builder.Build();
 	}
