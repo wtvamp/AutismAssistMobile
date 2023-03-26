@@ -1,0 +1,33 @@
+// Friends Razor page
+@page "/friends"
+@using AutismAssistMobile.Data
+@inject IFriendService friendService
+
+<h1>Friends</h1>
+
+@if (friends == null)
+{
+    <p>Loading...</p>
+}
+else if (friends.Count == 0)
+{
+    <p>No friends found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var friend in friends)
+        {
+            <li>@friend.FirstName @friend.LastName</li>
+        }
+    </ul>
+}
+
+@code {
+    List<Friend> friends;
+
+    protected override async Task OnInitializedAsync()
+    {
+        friends = await friendService.GetFriendsAsync();
+    }
+}
