@@ -10,5 +10,4 @@ public class FriendContext : DbContext
 
     public DbSet<Friend> Friends { get; set; }
     public DbSet<FriendImage> FriendImages { get; set; }
-
 }    

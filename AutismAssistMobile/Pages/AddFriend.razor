@@ -1,0 +1,36 @@
+@page "/addfriend"
+@using AutismAssistMobile.Data
+@inject IFriendService friendService
+@inject NavigationManager navigationManager
+
+<h1>Add Friend</h1>
+
+<form @onsubmit="SaveFriend">
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" @bind-value="friend.FirstName" required />
+    </div>
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" @bind-value="friend.LastName" required />
+    </div>
+    <div>
+        <button type="submit">Save</button>
+        <button type="button" @onclick="Cancel">Cancel</button>
+    </div>
+</form>
+
+@code {
+    Friend friend = new Friend();
+
+    private async Task SaveFriend()
+    {
+        await friendService.AddFriendAsync(friend);
+        navigationManager.NavigateTo("/friends");
+    }
+
+    private void Cancel()
+    {
+        navigationManager.NavigateTo("/friends");
+    }
+}

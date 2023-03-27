@@ -1,6 +1,7 @@
 @page "/friends"
 @using AutismAssistMobile.Data
 @inject IFriendService friendService
+@inject NavigationManager navigationManager
 
 <h1>Friends</h1>
 
@@ -22,11 +23,20 @@ else
     </ul>
 }
 
+<div>
+    <button @onclick="AddFriend">Add Friend</button>
+</div>
+
 @code {
     List<Friend> friends;
 
     protected override async Task OnInitializedAsync()
     {
         friends = await friendService.GetFriendsAsync();
+    }
+
+    private void AddFriend()
+    {
+        navigationManager.NavigateTo("/addfriend");
     }
 }
