@@ -24,7 +24,7 @@ else
 }
 
 <div>
-    <button @onclick="AddFriend">Add Friend</button>
+    <AddFriendButton />
 </div>
 
 @code {
@@ -33,10 +33,5 @@ else
     protected override async Task OnInitializedAsync()
     {
         friends = await friendService.GetFriendsAsync();
-    }
-
-    private void AddFriend()
-    {
-        navigationManager.NavigateTo("/addfriend");
     }
 }

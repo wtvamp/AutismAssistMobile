@@ -1,0 +1,10 @@
+@inject NavigationManager navigationManager
+
+<button @onclick="@AddFriend">Add Friend</button>
+
+@code {
+    private void AddFriend()
+    {
+        navigationManager.NavigateTo("/addfriend");
+    }
+}
