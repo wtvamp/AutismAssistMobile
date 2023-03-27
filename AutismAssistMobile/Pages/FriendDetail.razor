@@ -10,7 +10,7 @@
         <img src="@friendImage" width="10%"/>
     }
     <div>@friend.FirstName @friend.LastName</div>
-    <InputFile OnChange="@UploadImages" multiple />
+    <InputFile OnChange="@UploadImages" multiple accept=".jpg,.jpeg,.png" />
 </div>
 
 @code {
@@ -26,7 +26,7 @@
         friend = await friendService.GetFriend(id);
         foreach (var image in friend.Images)
         {
-            friendImageData.Add(string.Format("data:image/png;base64,{0}", Convert.ToBase64String(await FileService.LoadAsync(image.ImageUrl))));
+            friendImageData.Add(string.Format("data:image/{0};base64,{1}", Path.GetExtension(image.ImageUrl).TrimStart('.'), Convert.ToBase64String(await FileService.LoadAsync(image.ImageUrl))));
         }
     }
 
@@ -34,18 +34,27 @@
     {
         foreach (var file in e.GetMultipleFiles())
         {
-            using var memoryStream = new MemoryStream();
-            using var fileStream = file.OpenReadStream();
-            await fileStream.CopyToAsync(memoryStream);
-            var imageData = memoryStream.ToArray();
+            var extension = Path.GetExtension(file.Name);
+            var contentType = file.ContentType;
 
-            var filename = $"{friend.Id}_{Guid.NewGuid()}.png";
+            if (contentType != "image/jpeg" && contentType != "image/png")
+            {
+                // handle unsupported file types here
+                continue;
+            }
+
+            using var memoryStream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(memoryStream); // read the file contents into a MemoryStream
+            var imageData = memoryStream.ToArray(); // get the byte array from the MemoryStream
+
+            var filename = $"{friend.Id}_{Guid.NewGuid()}{extension}";
             var localImagePath = await FileService.SaveAsync(filename, imageData);
 
-            var newImage = new FriendImage { ImageUrl = localImagePath };
+            var newImage = new FriendImage { ImageUrl = localImagePath, ImageExtension = extension };
             friend.Images.Add(newImage);
-            friendImageData.Add(string.Format("data:image/png;base64,{0}", Convert.ToBase64String(imageData)));
+            friendImageData.Add(string.Format("data:image/{0};base64,{1}", extension.TrimStart('.'), Convert.ToBase64String(imageData)));
         }
+
         await friendService.SaveImages(friend);
     }
 }
